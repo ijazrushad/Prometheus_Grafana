@@ -2,16 +2,6 @@
 
 This repository contains the complete configuration for a robust monitoring stack using Docker, Prometheus, and Grafana. It is designed to provide comprehensive health and performance monitoring for servers and websites.
 
-monitoring-stack/
-├── docker-compose.yml
-├── prometheus_config/
-│   └── prometheus.yml
-├── nginx_config/
-│   └── default.conf
-├── blackbox_config/
-│   └── config.yml
-└── README.md
-
 The entire stack runs in Docker containers orchestrated by Docker Compose, making it portable and easy to manage.
 
 ## What's Being Monitored
