@@ -1,0 +1,40 @@
+# prometheus_config/prometheus.yml - With Node Exporter
+
+global:
+  scrape_interval: 15s # How often to check on your services
+  evaluation_interval: 15s
+
+scrape_configs:
+  # This first job tells Prometheus to monitor itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Monitor Node Exporter for system metrics
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets:
+        - 'node-exporter:9100'
+        - '18.143.227.177:9100'
+  # Monitor the Blackbox Exporter itself
+  - job_name: 'blackbox-exporter'
+    static_configs:
+      - targets: ['blackbox-exporter:9115']
+
+  # HTTP probes using Blackbox Exporter
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - https://wordstar.shabox.mobi/home/campaignimage
+        - https://quizmaster.shabox.mobi/home/campaignimage5
+        - https://gamestar.shabox.mobi/Home/CampaignImage4
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
