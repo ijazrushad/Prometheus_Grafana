@@ -111,3 +111,16 @@ Before you begin, you will need:
 ## Accessing Services
 * **Grafana Dashboard**: `https://<your_subdomain>`
 * **Prometheus UI**: `http://<Your_DO_Server_IP>:YOUR_PORT` (Requires opening port 9090 in your DigitalOcean firewall).
+
+## Dashboard Previews
+
+Here are some examples of the dashboards included in this monitoring stack.
+
+### Server Health Dashboard (Linux & Windows)
+![Server Health Dashboard](screenshots/dashboard-server-health.png)
+
+### Website Status Dashboard (Blackbox)
+![Website Status Dashboard](screenshots/dashboard-website-status.png)
+
+### MS SQL Server Dashboard
+![MS SQL Server Dashboard](screenshots/dashboard-sql-server.png)
