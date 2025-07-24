@@ -1,3 +1,16 @@
+## Dashboard Previews
+
+Here are some examples of the dashboards included in this monitoring stack.
+
+### Server Health Dashboard (Linux & Windows)
+![Server Health Dashboard](screenshots/dashboard-server-health.png)
+
+### Website Status Dashboard (Blackbox)
+![Website Status Dashboard](screenshots/dashboard-website-status.png)
+
+### MS SQL Server Dashboard
+![MS SQL Server Dashboard](screenshots/dashboard-sql-server.png)
+
 # Full-Stack Monitoring with Prometheus & Grafana
 
 This repository contains the complete configuration for a robust monitoring stack using Docker, Prometheus, and Grafana. It is designed to provide comprehensive health and performance monitoring for servers and websites across different cloud environments and operating systems.
