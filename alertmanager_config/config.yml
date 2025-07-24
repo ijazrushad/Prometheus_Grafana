@@ -1,0 +1,21 @@
+# alertmanager_config/config.yml
+
+global:
+  # Your SMTP server details
+  smtp_smarthost: 'smtp.example.com:587'
+  smtp_from: 'alertmanager@example.com'
+  smtp_auth_username: 'your-email@example.com'
+  smtp_auth_password: 'your-email-password' # Use an app password if using Gmail/Outlook
+
+route:
+  # The default receiver for all alerts
+  receiver: 'email-notifications'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+- name: 'email-notifications'
+  email_configs:
+  - to: 'your-official-email@example.com'
+    send_resolved: true

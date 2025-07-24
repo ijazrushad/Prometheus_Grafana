@@ -1,4 +1,4 @@
-# docker-compose.yml - Final Correct Version
+# docker-compose.yml - Full Version with Alerting and Logging
 
 version: '3.8'
 
@@ -13,6 +13,7 @@ services:
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
     restart: unless-stopped
     networks:
       - monitoring_net
@@ -20,10 +21,12 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     container_name: grafana
+    ports:
+      - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: 'Your Password'
+      GF_SECURITY_ADMIN_PASSWORD: 'your_secure_password'
       GF_SERVER_ROOT_URL: 'https://monitoring.adplay-mobile.com'
     restart: unless-stopped
     networks:
@@ -51,9 +54,49 @@ services:
     networks:
       - monitoring_net
 
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager_config/config.yml:/config/alertmanager.yml
+    command:
+      - '--config.file=/config/alertmanager.yml'
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki_config/loki-config.yml:/etc/loki/loki-config.yml
+      - loki_data:/loki
+    command:
+      - '-config.file=/etc/loki/loki-config.yml'
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./promtail_config/promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/log:/var/log
+    command:
+      - '-config.file=/etc/promtail/promtail-config.yml'
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+
 volumes:
   prometheus_data:
   grafana_data:
+  loki_data:
 
 networks:
   monitoring_net:

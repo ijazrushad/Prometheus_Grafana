@@ -20,12 +20,19 @@ The configuration is split into multiple files for easier management.
 ```
 .
 ├── docker-compose.yml      # Main file to launch all services.
+├── alertmanager_config/
+│   └── config.yml          # Create Alert Rule
 ├── prometheus_config/
-│   ├── prometheus.yml      # Main prometheus config, loads job files.
+│   ├── prometheus.yml  
+│   ├── alert.rules.yml    # Main prometheus config, loads job files.
 │   └── scrape_configs/
 │       ├── websites.yml    # All website monitoring jobs.
 │       ├── nodes.yml       # All Linux/Windows server monitoring jobs.
-│       └── sql.yml         # The SQL server monitoring job.
+│       └── sql.yml 
+├── loki_config/           
+│   └── loki-config.yml
+├── promtail_config/       
+│   └── promtail-config.yml        # The SQL server monitoring job.
 ├── nginx_config/
 │   └── default.conf        # NGINX config: reverse proxy for Grafana.
 ├── blackbox_config/

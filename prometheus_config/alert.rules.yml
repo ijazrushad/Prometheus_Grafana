@@ -1,0 +1,42 @@
+# prometheus_config/alert.rules.yml
+
+groups:
+  - name: ServerHealthAlerts
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} is down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+
+      - alert: HighCpuUsage
+        expr: 100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[5m])) * 100) > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Usage on {{ $labels.instance }}"
+          description: "CPU usage has been above 90% for the last 5 minutes on {{ $labels.instance }}."
+
+  - name: WebsiteHealthAlerts
+    rules:
+      - alert: WebsiteDown
+        expr: probe_success == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Website {{ $labels.instance }} is down"
+          description: "The URL {{ $labels.instance }} has been unreachable for more than 1 minute."
+
+      - alert: SSLCertificateExpiresSoon
+        expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 14 # 14 days
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "SSL certificate for {{ $labels.instance }} expires soon"
+          description: "The SSL certificate for {{ $labels.instance }} will expire in less than 14 days."
