@@ -1,4 +1,4 @@
-# docker-compose.yml - With Node Exporter
+# docker-compose.yml - Final Correct Version
 
 version: '3.8'
 
@@ -6,6 +6,8 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    ports:
+      - "9090:9090"
     volumes:
       - ./prometheus_config:/etc/prometheus/
       - prometheus_data:/prometheus
@@ -21,7 +23,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: 'YOUR PASSWORD'
+      GF_SECURITY_ADMIN_PASSWORD: 'Your Password'
       GF_SERVER_ROOT_URL: 'https://monitoring.adplay-mobile.com'
     restart: unless-stopped
     networks:
@@ -45,18 +47,6 @@ services:
       - '--config.file=/etc/blackbox/config.yml'
     volumes:
       - ./blackbox_config/config.yml:/etc/blackbox/config.yml
-    restart: unless-stopped
-    networks:
-      - monitoring_net
-
-  # Optional: Add Node Exporter for system metrics
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node_exporter
-    command:
-      - '--path.rootfs=/host'
-    volumes:
-      - '/:/host:ro,rslave'
     restart: unless-stopped
     networks:
       - monitoring_net

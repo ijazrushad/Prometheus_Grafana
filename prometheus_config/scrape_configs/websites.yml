@@ -1,0 +1,84 @@
+scrape_configs:
+
+- job_name: 'blackbox' # Original Ad Campaigns
+  metrics_path: /probe
+  params:
+    module: [http_2xx]
+  static_configs:
+    - targets:
+      - https://wordstar.shabox.mobi/home/campaignimage
+      - https://quizmaster.shabox.mobi/home/campaignimage5
+      - https://gamestar.shabox.mobi/Home/CampaignImage4
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox_exporter:YOUR_PORT
+
+- job_name: 'blackbox_new_campaigns'
+  metrics_path: /probe
+  params:
+    module: [http_2xx]
+  static_configs:
+    - targets:
+      - https://gamekheli.com/home/campaignimage?ckey=68304599
+      - https://quizstar.info/gpdob/ConsentUrlOnlineAdd?ckey=54793363
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox_exporter:YOUR_PORT
+
+- job_name: 'blackbox_portals'
+  metrics_path: /probe
+  params:
+    module: [http_2xx]
+  static_configs:
+    - targets:
+      - https://toucan.adplaytechnology.com/
+      - https://vbox.adplay-mobile.com/
+      - https://adplaytechnology.com/
+      - https://designs.adplay-mobile.com/
+      - https://ramadan.adplaytechnology.com/
+      - https://quiz.adplay-mobile.com/
+      - https://creative.adplay-mobile.com/
+      - https://n8n.adplay-mobile.com/
+      - https://rtb.adplay-mobile.com/
+      - https://hrm-cms.adplay-mobile.com/
+      - https://monitoring.adplay-mobile.com/
+      - https://uptime.adplaytechnology.com/
+      - https://baarta.co/
+      - https://game.adplay-mobile.com/
+      - https://games.adplay-mobile.com/
+      - https://localadx.adplaytechnology.com/
+      - https://transsion.adplay-mobile.com/
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox_exporter:YOUR_PORT
+
+
+- job_name: 'blackbox_shabox_main'
+  metrics_path: /probe
+  params:
+    module: [http_2xx]
+  static_configs:
+    - targets:
+      - https://quizmaster.shabox.mobi/
+      - https://gamestar.shabox.mobi/
+      - https://wordstar.shabox.mobi/
+      - https://kidstar.shabox.mobi/
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox_exporter:YOUR_PORT
