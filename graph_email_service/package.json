@@ -1,0 +1,26 @@
+{
+  "name": "graph-email-service",
+  "version": "1.0.0",
+  "description": "Microsoft Graph API email service for Alertmanager webhooks",
+  "main": "graph-email-service.js",
+  "scripts": {
+    "start": "node graph-email-service.js",
+    "dev": "nodemon graph-email-service.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "alertmanager",
+    "microsoft-graph",
+    "email",
+    "webhook"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

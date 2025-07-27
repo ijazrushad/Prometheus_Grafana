@@ -32,26 +32,32 @@ The configuration is split into multiple files for easier management.
 
 ```
 .
-├── docker-compose.yml      # Main file to launch all services.
+├── docker-compose.yml      # Main file to launch all services
 ├── alertmanager_config/
-│   └── config.yml          # Create Alert Rule
+│   └── config.yml          # Alertmanager configuration with Graph API webhook
 ├── prometheus_config/
-│   ├── prometheus.yml  
-│   ├── alert.rules.yml    # Main prometheus config, loads job files.
+│   ├── prometheus.yml      # Main prometheus config, loads job files
+│   ├── alert.rules.yml     # Alert rules definition
 │   └── scrape_configs/
-│       ├── websites.yml    # All website monitoring jobs.
-│       ├── nodes.yml       # All Linux/Windows server monitoring jobs.
-│       └── sql.yml 
+│       ├── websites.yml    # All website monitoring jobs
+│       ├── nodes.yml       # All Linux/Windows server monitoring jobs
+│       └── sql.yml         # The SQL server monitoring job
 ├── loki_config/           
-│   └── loki-config.yml
+│   └── loki-config.yml     # Loki log aggregation configuration
 ├── promtail_config/       
-│   └── promtail-config.yml        # The SQL server monitoring job.
+│   └── promtail-config.yml # Promtail log collection configuration
 ├── nginx_config/
-│   └── default.conf        # NGINX config: reverse proxy for Grafana.
+│   └── default.conf        # NGINX reverse proxy for Grafana
 ├── blackbox_config/
-│   └── config.yml          # Blackbox Exporter config: how to probe URLs.
-└── README.md               # This documentation file.
+│   └── config.yml          # Blackbox Exporter URL probing configuration
+├── graph_email_service/    # NEW: Microsoft Graph API email service
+│   ├── Dockerfile          # Docker build configuration
+│   ├── package.json        # Node.js dependencies
+│   ├── graph-email-service.js  # Main email service application
+│   └── healthcheck.js      # Health check endpoint
+└── README.md               # This documentation file
 ```
+
 
 ## Prerequisites
 
@@ -132,15 +138,23 @@ Before you begin, you will need:
 * **Grafana Dashboard**: `https://<your_subdomain>`
 * **Prometheus UI**: `http://<Your_DO_Server_IP>:YOUR_PORT` (Requires opening port 9090 in your DigitalOcean firewall).
 
-## Dashboard Previews
+## Troubleshooting
+Logs
+docker-compose logs
 
-Here are some examples of the dashboards included in this monitoring stack.
+docker-compose logs [service-name]
+docker-compose logs -f [service-name]
 
-### Server Health Dashboard (Linux & Windows)
-![Server Health Dashboard](screenshots/dashboard-server-health.png)
+Loki crash loop
+Fix allow_structured_metadata: false in loki-config.yml
 
-### Website Status Dashboard (Blackbox)
-![Website Status Dashboard](screenshots/dashboard-website-status.png)
+Connectivity
+docker network inspect monitoring_stack_monitoring_net
+docker-compose exec prometheus ping alertmanager
 
-### MS SQL Server Dashboard
-![MS SQL Server Dashboard](screenshots/dashboard-sql-server.png)
+Architecture Overview
+Prometheus ─┬─ Alertmanager ── Graph Email Service ── Microsoft Graph API
+            │
+            └─ Grafana
+            └─ Loki ── Promtail
+

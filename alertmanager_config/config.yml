@@ -1,21 +1,22 @@
 # alertmanager_config/config.yml
 
 global:
-  # Your SMTP server details
-  smtp_smarthost: 'smtp.example.com:587'
-  smtp_from: 'alertmanager@example.com'
-  smtp_auth_username: 'your-email@example.com'
-  smtp_auth_password: 'your-email-password' # Use an app password if using Gmail/Outlook
+  # Microsoft Graph API email notifications via webhook
 
 route:
   # The default receiver for all alerts
-  receiver: 'email-notifications'
+  receiver: 'graph-email-notifications'
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 4h
 
 receivers:
-- name: 'email-notifications'
-  email_configs:
-  - to: 'your-official-email@example.com'
+- name: 'graph-email-notifications'
+  webhook_configs:
+  - url: 'http://graph-email-service:8080/webhook'
     send_resolved: true
+    http_config:
+      # Optional: Add basic auth if you want to secure the webhook
+      # basic_auth:
+      #   username: 'webhook_user'
+      #   password: 'webhook_password'

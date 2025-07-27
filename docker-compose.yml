@@ -1,4 +1,4 @@
-# docker-compose.yml - Full Version with Alerting and Logging
+# docker-compose.yml - Fixed Version
 
 version: '3.8'
 
@@ -13,7 +13,6 @@ services:
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--web.enable-lifecycle'
     restart: unless-stopped
     networks:
       - monitoring_net
@@ -21,12 +20,10 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     container_name: grafana
-    ports:
-      - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: 'your_secure_password'
+      GF_SECURITY_ADMIN_PASSWORD: 'YOUR_PASSWORD'
       GF_SERVER_ROOT_URL: 'https://monitoring.adplay-mobile.com'
     restart: unless-stopped
     networks:
@@ -74,12 +71,34 @@ services:
       - "3100:3100"
     volumes:
       - ./loki_config/loki-config.yml:/etc/loki/loki-config.yml
-      - loki_data:/loki
+      - ./loki_data:/loki
     command:
       - '-config.file=/etc/loki/loki-config.yml'
     restart: unless-stopped
     networks:
       - monitoring_net
+
+  graph-email-service:
+    build:
+      context: ./graph_email_service
+      dockerfile: Dockerfile
+    container_name: graph-email-service
+    ports:
+      - "8081:8080"  
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    networks:
+      - monitoring_net
+    restart: unless-stopped
+    depends_on:
+      - alertmanager
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   promtail:
     image: grafana/promtail:latest
