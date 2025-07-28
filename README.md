@@ -152,7 +152,7 @@ Connectivity
 docker network inspect monitoring_stack_monitoring_net
 docker-compose exec prometheus ping alertmanager
 
-Architecture Overview
+## Architecture Overview
 Prometheus ─┬─ Alertmanager ── Graph Email Service ── Microsoft Graph API
             │
             └─ Grafana
