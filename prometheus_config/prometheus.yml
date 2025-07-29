@@ -4,21 +4,19 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
-# Add this section to load your alert rules
 rule_files:
-  - "alert.rules.yml"
+  - 'alert.rules.yml'
 
-# Add this section to tell Prometheus where Alertmanager is
 alerting:
   alertmanagers:
-    - static_configs:
-        - targets: ['alertmanager:9093']
+  - static_configs:
+    - targets:
+      
+      - 'alertmanager:9093'
 
-# Load scrape configurations from all .yml files in the 'scrape_configs' directory
 scrape_config_files:
   - 'scrape_configs/*.yml'
 
-# Scrape config for prometheus itself
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:

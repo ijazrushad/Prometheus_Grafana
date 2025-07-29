@@ -5,32 +5,32 @@ groups:
     rules:
       - alert: InstanceDown
         expr: up == 0
-        for: 1m
+        for: 10m
         labels:
           severity: critical
         annotations:
           summary: "Instance {{ $labels.instance }} is down"
-          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 10 minutes."
 
       - alert: HighCpuUsage
         expr: 100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[5m])) * 100) > 90
-        for: 5m
+        for: 10m
         labels:
           severity: warning
         annotations:
           summary: "High CPU Usage on {{ $labels.instance }}"
-          description: "CPU usage has been above 90% for the last 5 minutes on {{ $labels.instance }}."
+          description: "CPU usage has been above 90% for the last 10 minutes on {{ $labels.instance }}."
 
   - name: WebsiteHealthAlerts
     rules:
       - alert: WebsiteDown
         expr: probe_success == 0
-        for: 1m
+        for: 2m
         labels:
           severity: critical
         annotations:
           summary: "Website {{ $labels.instance }} is down"
-          description: "The URL {{ $labels.instance }} has been unreachable for more than 1 minute."
+          description: "The URL {{ $labels.instance }} has been unreachable for more than 2 minutes."
 
       - alert: SSLCertificateExpiresSoon
         expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 14 # 14 days
@@ -40,3 +40,14 @@ groups:
         annotations:
           summary: "SSL certificate for {{ $labels.instance }} expires soon"
           description: "The SSL certificate for {{ $labels.instance }} will expire in less than 14 days."
+
+      - alert: HighProbeDuration
+        
+        expr: >
+          avg_over_time(probe_duration_seconds{instance=~"^(https://gamestar\\.shabox\\.mobi/Home/CampaignImage4|https://quizmaster\\.shabox\\.mobi/home/campaignimage5|https://wordstar\\.shabox\\.mobi/home/campaignimage)$"}[5m]) > 0.2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Probe Duration for {{ $labels.instance }}"
+          description: "The average probe duration for {{ $labels.instance }} has been {{ $value | humanizeDuration }} for the last 10 minutes, which is above the 200ms threshold."
